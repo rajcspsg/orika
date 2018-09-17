@@ -17,12 +17,12 @@
  */
 package ma.glasnost.orika.constructor;
 
-import com.thoughtworks.paranamer.AdaptiveParanamer;
-import com.thoughtworks.paranamer.AnnotationParanamer;
-import com.thoughtworks.paranamer.BytecodeReadingParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
-import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
-import com.thoughtworks.paranamer.Paranamer;
+//import com.thoughtworks.paranamer.AdaptiveParanamer;
+//import com.thoughtworks.paranamer.AnnotationParanamer;
+//import com.thoughtworks.paranamer.BytecodeReadingParanamer;
+//import com.thoughtworks.paranamer.CachingParanamer;
+//import com.thoughtworks.paranamer.ParameterNamesNotFoundException;
+//import com.thoughtworks.paranamer.Paranamer;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -41,6 +41,7 @@ import ma.glasnost.orika.metadata.MappingDirection;
 import ma.glasnost.orika.metadata.Property;
 import ma.glasnost.orika.metadata.Type;
 import ma.glasnost.orika.metadata.TypeFactory;
+import ma.glasnost.orika.util.ParanamerUtil;
 
 import static ma.glasnost.orika.impl.Specifications.aMappingOfTheRequiredClassProperty;
 
@@ -56,11 +57,11 @@ import static ma.glasnost.orika.impl.Specifications.aMappingOfTheRequiredClassPr
  */
 public class SimpleConstructorResolverStrategy implements ConstructorResolverStrategy {
 
-    private final Paranamer paranamer;
+    //private final Paranamer paranamer;
 
-    public SimpleConstructorResolverStrategy() {
-        paranamer = new CachingParanamer(new AdaptiveParanamer(new BytecodeReadingParanamer(), new AnnotationParanamer()));
-    }
+//    public SimpleConstructorResolverStrategy() {
+//        paranamer = new CachingParanamer(new AdaptiveParanamer(new BytecodeReadingParanamer(), new AnnotationParanamer()));
+//    }
 
     @SuppressWarnings({"unchecked"})
     public <T, A, B> ConstructorMapping<T> resolve(ClassMap<A, B> classMap, Type<T> sourceType) {
@@ -80,7 +81,9 @@ public class SimpleConstructorResolverStrategy implements ConstructorResolverStr
             constructorMapping.setDeclaredParameters(declaredParameterNames);
             final java.lang.reflect.Type[] genericParamTypes = constructor.getGenericParameterTypes();
             try {
-                final String[] parameterNames = mapTargetParamNames(paranamer.lookupParameterNames(constructor));
+                System.out.println("target class "+ targetClass.getName());
+                final String[] parameterNames = mapTargetParamNames(ParanamerUtil.getParanamers(constructor));
+                printNames(parameterNames);
                 constructorMapping.setParameterNameInfoAvailable(true);
                 if (targetParameters.keySet().containsAll(Arrays.asList(parameterNames))) {
                     foundDeclaredConstructor = true;
@@ -88,7 +91,7 @@ public class SimpleConstructorResolverStrategy implements ConstructorResolverStr
                     mapConstructorArgs(constructorMapping, targetParameters, parameterNames, genericParamTypes, byDefault);
                     constructorsByMatchedParams.put(parameterNames.length * 1000, constructorMapping);
                 }
-            } catch (ParameterNamesNotFoundException e) {
+            } catch (Exception e) {
                 /*
                  * Could not find parameter names of the constructors; attempt to match constructors
                  * based on the types of the destination properties
@@ -102,6 +105,13 @@ public class SimpleConstructorResolverStrategy implements ConstructorResolverStr
         return prepareMatchedConstructorMapping(constructorsByMatchedParams, targetClass, sourceClass, declaredParameterNames, foundDeclaredConstructor, constructors);
     }
 
+
+    private void printNames(String []args) {
+        System.out.println("Star printing param names");
+        for (int i =0 ; i < args.length; i++)
+            System.out.println(args[i]);
+        System.out.println("Complete printing names");
+    }
     /**
      * Maps parameter names from target constructor.
      *

@@ -16,11 +16,13 @@ import ma.glasnost.orika.metadata.Property;
 import ma.glasnost.orika.metadata.Type;
 import ma.glasnost.orika.metadata.TypeFactory;
 
-import com.thoughtworks.paranamer.AdaptiveParanamer;
-import com.thoughtworks.paranamer.AnnotationParanamer;
-import com.thoughtworks.paranamer.BytecodeReadingParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
-import com.thoughtworks.paranamer.Paranamer;
+//import com.thoughtworks.paranamer.AdaptiveParanamer;
+//import com.thoughtworks.paranamer.AnnotationParanamer;
+//import com.thoughtworks.paranamer.BytecodeReadingParanamer;
+//import com.thoughtworks.paranamer.CachingParanamer;
+//import com.thoughtworks.paranamer.Paranamer;
+
+import ma.glasnost.orika.util.ParanamerUtil;
 
 /**
  * ConstructorParameterResolver is a utility for resolving constructor
@@ -31,8 +33,8 @@ import com.thoughtworks.paranamer.Paranamer;
  */
 public class ConstructorParameterResolver {
     
-    private final Paranamer paranamer = new CachingParanamer(new AdaptiveParanamer(new BytecodeReadingParanamer(),
-            new AnnotationParanamer()));
+    //private final Paranamer paranamer = new CachingParanamer(new AdaptiveParanamer(new BytecodeReadingParanamer(),
+            //new AnnotationParanamer()));
     
     private final Map<java.lang.reflect.Type, Map<String, Set<Property>>> constructorPropertiesByType = new ConcurrentHashMap<java.lang.reflect.Type, Map<String, Set<Property>>>();
     
@@ -58,7 +60,7 @@ public class ConstructorParameterResolver {
                     
                     for (Constructor<?> constructor : resolvedType.getRawType().getConstructors()) {
                         
-                        String[] names = paranamer.lookupParameterNames(constructor, false);
+                        String[] names = ParanamerUtil.getParanamers(constructor);
                         java.lang.reflect.Type[] types = constructor.getGenericParameterTypes();
                         List<Property> constructorArgs = new ArrayList<Property>();
                         

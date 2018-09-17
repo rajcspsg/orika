@@ -107,6 +107,7 @@ public class ConstructorMappingTestCase {
     
     @Test
     public void testFindConstructor() throws Throwable {
+		System.out.println("start  testFindConstructor");
     	final SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
         MapperFactory factory = MappingUtil.getMapperFactory();
         
@@ -129,6 +130,7 @@ public class ConstructorMappingTestCase {
         Assert.assertEquals(person.getLastName(), vo.getLastName());
         Assert.assertTrue(person.getAge() == vo.getAge());
         Assert.assertEquals("01/01/1980", vo.getDateOfBirth());
+		System.out.println("End testFindConstructor");
     }
     
     public static long yearsDifference(final Date start, final Date end) {
@@ -138,6 +140,7 @@ public class ConstructorMappingTestCase {
     
     @Test
     public void testFindConstructor2() throws Throwable {
+		System.out.println("start testFindConstructor2");
     	final SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
         MapperFactory factory = MappingUtil.getMapperFactory();
         
@@ -166,6 +169,7 @@ public class ConstructorMappingTestCase {
         Assert.assertEquals(person.getLastName(), vo.getLastName());
         Assert.assertTrue(person.getAge() == vo.getAge());
         Assert.assertEquals("01/01/1980", vo.getDateOfBirth());
+		System.out.println("End testFindConstructor2");
     }
     
     @Test
@@ -445,6 +449,7 @@ public class ConstructorMappingTestCase {
     
     @Test
     public void testConstructorsWithoutDebugInfo() {
+		System.out.println("Start testConstructorsWithoutDebugInfo");
     	MapperFactory factory = MappingUtil.getMapperFactory();
 
         factory.classMap(URLDto1.class, URL.class)
@@ -466,7 +471,7 @@ public class ConstructorMappingTestCase {
     	Assert.assertEquals(dto1.protocolX, url.getProtocol());
     	Assert.assertEquals(dto1.hostX, url.getHost());
     	Assert.assertEquals(dto1.portX, url.getPort());
-    	
+		System.out.println("End testConstructorsWithoutDebugInfo");
     }
 
 	@Test
